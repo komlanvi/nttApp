@@ -4,19 +4,10 @@
 import React from "react";
 import Table from './Table';
 import TableColumn from './TableColumn';
-
-var chaincode = "c2addf536d9cb507530561a99e6d90a26eacdf9ea961cf0c07ef56956e728a697e2ab943735694242c2bf8ca2cee0a5a0fd010be7fe6c96edf7d8606f7183a43";
+import chaincode from '../js/utility';
+import { fetchShipments } from '../actions';
 
 export default class Driver extends React.Component {
-
-
-    constructor(){
-        super();
-        this.state = {
-            shipments: [],
-            checkedList: []
-        }
-    }
 
     componentWillMount() {
         this._fetchShipments();
@@ -144,6 +135,9 @@ export default class Driver extends React.Component {
             console.log(ship);
         });
 
+        dispatch({
+            type:
+        })
         //alert(str);
         this.setState({
             shipments: x
@@ -213,6 +207,7 @@ export default class Driver extends React.Component {
     }
 
     render() {
+        const { shipments, checkedList } = this.props;
         return (
             <div>
                 <Table columns={this._getColumns()} />

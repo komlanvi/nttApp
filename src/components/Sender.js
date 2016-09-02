@@ -4,113 +4,112 @@
 import React from "react";
 import Table from './Table';
 import TableColumn from './TableColumn';
+import chaincode from '../js/utility';
+import { fetchShipments, addShipment } from '../actions';
 
-var chaincode = "c2addf536d9cb507530561a99e6d90a26eacdf9ea961cf0c07ef56956e728a697e2ab943735694242c2bf8ca2cee0a5a0fd010be7fe6c96edf7d8606f7183a43";
-
-export default class Factory extends React.Component {
+class Sender extends React.Component{
 
     constructor(){
         super();
-        this.state = {
-            shipments: [],
-            checkedList: []
-        }
     }
-
-    componentWillMount() {
-        this._listaShipments();
-    }
-
-    componentDidMount() {
-        //this._timer = setInterval(() => this._listaShipments(), 4000);
-    }
-
-    componentWillUnmount() {
-        //clearInterval(this._timer);
-    }
+    //
+    // componentWillMount() {
+    //     this._listaShipments();
+    // }
+    //
+    // componentDidMount() {
+    //     //this._timer = setInterval(() => this._listaShipments(), 4000);
+    // }
+    //
+    // componentWillUnmount() {
+    //     //clearInterval(this._timer);
+    // }
 
     //GET ALL
-    _listaShipments() {
-        /*$.ajax({
-         type: "POST",
-         url: "http://10.186.65.231:5000/chaincode",
-         data: JSON.stringify(
-         {
-         "jsonrpc": "2.0",
-         "method": "query",
-         "params": {
-         "type": 1,
-         "chaincodeID":{
-         "name": `${chaincode}`
-         },
-         "ctorMsg": {
-         "function":"get_shipments",
-         "args":["factory_1","truck_1","destination_1"]
-         },
-         "secureContext": "factory_nvp"
-         },
-         "id": 5
-         }
-         ),
-         success: (shipments, status) => {
-         var str = JSON.stringify(shipments, null, 4);
-         console.log("Successfully fetched " +str);
-         console.log(shipments["result"]["message"]);
 
-         shipments = JSON.parse(shipments["result"]["message"])
+    _listaShipments()
+    {
+        $.ajax({
+            type: "POST",
+            url: "http://10.186.65.231:5000/chaincode",
+            data: JSON.stringify(
+                {
+                    "jsonrpc": "2.0",
+                    "method": "query",
+                    "params": {
+                        "type": 1,
+                        "chaincodeID":{
+                            "name": `${chaincode}`
+                        },
+                        "ctorMsg": {
+                            "function":"get_shipments",
+                            "args":["factory_1","truck_1","destination_1"]
+                        },
+                        "secureContext": "factory_nvp"
+                    },
+                    "id": 5
+                }
+            ),
+            success: (shipments, status) => {
+                var str = JSON.stringify(shipments, null, 4);
+                console.log("Successfully fetched " +str);
+                console.log(shipments["result"]["message"]);
 
-         let arr = [];
+                shipments = JSON.parse(shipments["result"]["message"])
 
-         for(var key in shipments) {
-         if(shipments.hasOwnProperty(key)) {
-         console.log(shipments[key]);
-         let obj = {};
-         let length = shipments[key].length;
-         for(var i = 0; i < length; i++) {
-         //console.log("Key = " +shipments[key][i] + " and object is " +shipments[key][i]);
-         if (i == 0) {
-         obj["factory"] = shipments[key][i];
-         } else if (i == 1) {
-         obj["truck"] = shipments[key][i];
-         } else if (i == 2) {
-         obj["destination"] = shipments[key][i];
-         } else if (i == 3) {
-         obj["timestamp"] = shipments[key][i];
-         } else if (i == 4) {
-         obj["driver"] = shipments[key][i];
-         } else if(i == 5) {
-         obj["volume"] = shipments[key][i];
-         }else if(i == 6){
-         obj["vbf"] = shipments[key][i];
-         }else if(i == 7){
-         obj["vbdr"] = shipments[key][i];
-         }else if(i == 8){
-         obj["vbde"] = shipments[key][i];
-         } else if(i == length-1) {
+                let arr = [];
 
-         }
-         obj["id"] = Math.random();
-         //console.log("Obj[" +shipments[key][i]+ "] = " +obj[shipments[key][i]]);
-         }
-         if(!$.isEmptyObject(obj)) arr.push(obj);
-         }
-         }
+                for(var key in shipments) {
+                    if(shipments.hasOwnProperty(key)) {
+                        console.log(shipments[key]);
+                        let obj = {};
+                        let length = shipments[key].length;
+                        for(var i = 0; i < length; i++) {
+                            //console.log("Key = " +shipments[key][i] + " and object is " +shipments[key][i]);
+                            if (i == 0) {
+                                obj["factory"] = shipments[key][i];
+                            } else if (i == 1) {
+                                obj["truck"] = shipments[key][i];
+                            } else if (i == 2) {
+                                obj["destination"] = shipments[key][i];
+                            } else if (i == 3) {
+                                obj["timestamp"] = shipments[key][i];
+                            } else if (i == 4) {
+                                obj["driver"] = shipments[key][i];
+                            } else if(i == 5) {
+                                obj["volume"] = shipments[key][i];
+                            }else if(i == 6){
+                                obj["vbf"] = shipments[key][i];
+                            }else if(i == 7){
+                                obj["vbdr"] = shipments[key][i];
+                            }else if(i == 8){
+                                obj["vbde"] = shipments[key][i];
+                            } else if(i == length-1) {
 
-         arr.map((ship) => {
-         console.log(ship);
-         });
+                            }
+                            obj["id"] = Math.random();
+                            //console.log("Obj[" +shipments[key][i]+ "] = " +obj[shipments[key][i]]);
+                        }
+                        if(!$.isEmptyObject(obj)) arr.push(obj);
+                    }
+                }
 
-         //alert(str);
-         this.setState({
-         shipments: arr
-         });
-         },
-         error: (error) => {
-         console.log(error);
-         },
-         dataType: "json",
-         contentType: "application/json"
-         });*/
+                arr.map((ship) => {
+                    console.log(ship);
+                });
+                //
+                // //alert(str);
+                // this.setState({
+                //     shipments: arr
+                // });
+                this.props._fetchShipments();
+            },
+            error: (error) => {
+                console.log(error);
+            },
+            dataType: "json",
+            contentType: "application/json"
+        });
         var x = [
             {
                 id: 1,
@@ -151,48 +150,48 @@ export default class Factory extends React.Component {
 
     //ADD
     _aggiungiNuovoShipment() {
-        console.log(this._factory.value);
-        /*$.ajax({
-         type: "POST",
-         url: "http://10.186.65.231:5000/chaincode",
-         data: JSON.stringify(
-         {
-         "jsonrpc": "2.0",
-         "method": "invoke",
-         "params": {
-         "type": 1,
-         "chaincodeID":{
-         "name": `${chaincode}`
-         },
-         "ctorMsg": {
-         "function":"shipment",
-         "args":[ `${this._factory.value}`, `${this._truck.value}`, `${this._driver.value}`, `${this._volume.value}`, `${this._destination.value}`]
-         },
-         "secureContext": "factory_nvp",
-         "attributes": ["create"]
-         },
-         "id": 3
-         }
-         ),
-         success: (data, status) => {
-         var str = JSON.stringify(data, null, 4);
-         //str = JSON.stringify(obj, null, 4); // (Optional) beautiful indented output.
-         console.log("Successfully posted "+str);
-         /*
-         this.setState({
-         shipments: this.state.shipments.concat([])
-         })*//*
-         },
-         error: (error) => {
-         console.log(error);
-         },
-         dataType: "json",
-         contentType: "application/json"
-         });*/
+        $.ajax({
+            type: "POST",
+            url: "http://10.186.65.231:5000/chaincode",
+            data: JSON.stringify(
+                {
+                    "jsonrpc": "2.0",
+                    "method": "invoke",
+                    "params": {
+                        "type": 1,
+                        "chaincodeID":{
+                            "name": `${chaincode}`
+                        },
+                        "ctorMsg": {
+                            "function":"shipment",
+                            "args":[ `${this._factory.value}`, `${this._truck.value}`, `${this._driver.value}`, `${this._volume.value}`, `${this._destination.value}`]
+                        },
+                        "secureContext": "factory_nvp",
+                        "attributes": ["create"]
+                    },
+                    "id": 3
+                }
+            ),
+            success: (data, status) => {
+                var str = JSON.stringify(data, null, 4);
+                //str = JSON.stringify(obj, null, 4); // (Optional) beautiful indented output.
+                console.log("Successfully posted "+str);
+
+                this.setState({
+                    shipments: this.state.shipments.concat([])
+                })
+            },
+            error: (error) => {
+                console.log(error);
+            },
+            dataType: "json",
+            contentType: "application/json"
+        });
+
     }
 
     _getColumns() {
-        //console.log(this.state.shipments);
+        console.log(this.state.shipments);
         return this.state.shipments.map((c) => {
             return <TableColumn shipment={c} key={c.id} addToCheckedList={this._addToCheckedList.bind(this)}/>
         });
@@ -203,38 +202,38 @@ export default class Factory extends React.Component {
             this.state.shipments.map((shipment) => {
                 if(shipment.id == id) {
                     console.log(shipment.factory +" has been verified");
-                    /*$.ajax({
-                     type: "POST",
-                     url: "http://10.186.65.231:5000/chaincode",
-                     data: JSON.stringify(
-                     {
-                     "jsonrpc": "2.0",
-                     "method": "invoke",
-                     "params": {
-                     "type": 1,
-                     "chaincodeID":{
-                     "name":`${chaincode}`
-                     },
-                     "ctorMsg": {
-                     "function":"verify",
-                     "args":["factory_1","truck_1","destination_1",`${shipment.timestamp}`]
+                    $.ajax({
+                        type: "POST",
+                        url: "http://10.186.65.231:5000/chaincode",
+                        data: JSON.stringify(
+                            {
+                                "jsonrpc": "2.0",
+                                "method": "invoke",
+                                "params": {
+                                    "type": 1,
+                                    "chaincodeID":{
+                                        "name":`${chaincode}`
+                                    },
+                                    "ctorMsg": {
+                                        "function":"verify",
+                                        "args":["factory_1","truck_1","destination_1",`${shipment.timestamp}`]
 
-                     },
-                     "secureContext": "factory_nvp",
-                     "attributes": ["verify", "id"]
-                     },
-                     "id": 3
-                     }
-                     ),
-                     success: (success) => {
-                     console.log(success);
-                     },
-                     error: (error) => {
-                     console.log(error);
-                     },
-                     dataType: "json",
-                     contentType: "application/json"
-                     });*/
+                                    },
+                                    "secureContext": "factory_nvp",
+                                    "attributes": ["verify", "id"]
+                                },
+                                "id": 3
+                            }
+                        ),
+                        success: (success) => {
+                            console.log(success);
+                        },
+                        error: (error) => {
+                            console.log(error);
+                        },
+                        dataType: "json",
+                        contentType: "application/json"
+                    });
                 }
             });
         })
@@ -254,6 +253,7 @@ export default class Factory extends React.Component {
     }
 
     render() {
+        const { add_shipments,  } = this.props;
         return (
             <div>
                 <Table columns={this._getColumns()}  />
