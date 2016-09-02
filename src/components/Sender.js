@@ -5,7 +5,8 @@ import React from "react";
 import Table from './Table';
 import TableColumn from './TableColumn';
 import chaincode from '../js/utility';
-import { fetchShipments, addShipment } from '../actions';
+import { refresh_checked_list, add_shipments } from '../actions';
+import { connect, dispatch } from 'react-redux'
 
 class Sender extends React.Component{
 
@@ -28,7 +29,7 @@ class Sender extends React.Component{
     //GET ALL
 
     _listaShipments()
-    {
+    {   /*
         $.ajax({
             type: "POST",
             url: "http://10.186.65.231:5000/chaincode",
@@ -109,7 +110,7 @@ class Sender extends React.Component{
             },
             dataType: "json",
             contentType: "application/json"
-        });
+        });*/
         var x = [
             {
                 id: 1,
@@ -142,15 +143,17 @@ class Sender extends React.Component{
             console.log(ship);
         });
 
-        //alert(x);
-        this.setState({
-            shipments: x
-        });
+        // //alert(x);
+        // this.setState({
+        //     shipments: x
+        // });
+        this.props.add_shipments(x);
+
     }
 
     //ADD
     _aggiungiNuovoShipment() {
-        $.ajax({
+        /*$.ajax({
             type: "POST",
             url: "http://10.186.65.231:5000/chaincode",
             data: JSON.stringify(
@@ -186,13 +189,13 @@ class Sender extends React.Component{
             },
             dataType: "json",
             contentType: "application/json"
-        });
+        });*/
 
     }
 
     _getColumns() {
-        console.log(this.state.shipments);
-        return this.state.shipments.map((c) => {
+        console.log(this.props.shipments);
+        return this.props.shipments.map((c) => {
             return <TableColumn shipment={c} key={c.id} addToCheckedList={this._addToCheckedList.bind(this)}/>
         });
     }
@@ -348,3 +351,19 @@ class Sender extends React.Component{
         this._verify();
     }
 }
+
+const mapStateToProps = (state) => {
+    return {
+        shipments: state.shipments
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        add_shipments: (shipment) => {
+            dispatch(add_shipments(shipment))
+        }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Sender)

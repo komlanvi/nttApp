@@ -24,7 +24,7 @@ export function add_shipments(state = initialState, action) {
                 ...state,
                 shipments: [
                     state.shipments,
-                    ...action.payload
+                    ...action.shipments
                 ]
             };
         default:

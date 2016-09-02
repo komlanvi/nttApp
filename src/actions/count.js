@@ -1,25 +1,23 @@
 import * as type from '../constants'
 
 export function increase(n) {
-  return {
-    type: type.INCREASE,
-    amount: n
-  }
+    return {
+        type: type.INCREASE,
+        amount: n
+    }
 }
 
 export function decrease(n) {
-  return {
-    type: type.DECREASE,
-    amount: n
-  }
+    return {
+        type: type.DECREASE,
+        amount: n
+    }
 }
 export function add_shipments(shipments = []) {
-  return {
-    type: type.ADD_SHIPMENTS,
-    payload: {
-      shipments
+    return {
+        type: type.ADD_SHIPMENTS,
+        shipments
     }
-  }
 }
 
 export function refresh_checked_list(checkedList = []) {

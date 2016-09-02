@@ -5,7 +5,7 @@ import React from "react";
 import Table from './Table';
 import TableColumn from './TableColumn';
 import chaincode from '../js/utility';
-import { fetchShipments } from '../actions';
+import { fetch_shipments } from '../actions';
 
 export default class Driver extends React.Component {
 
@@ -135,9 +135,6 @@ export default class Driver extends React.Component {
             console.log(ship);
         });
 
-        dispatch({
-            type:
-        })
         //alert(str);
         this.setState({
             shipments: x
