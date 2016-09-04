@@ -3,17 +3,22 @@
  */
 import Sender from '../components/Sender';
 import { connect } from 'react-redux';
+import React from 'react'
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
     return {
-
-    };
-};
-
-const mapDispatchToProps = (dispatch) => {
-    return {
-
+        shipments: state.shipments,
+        users: state.users,
+        filter: ownProps.location.query.filter
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Sender);
+const mapDispatchToProps = (dispatch) => {
+    return {
+        add_shipments: (shipment) => {
+            dispatch(add_shipments(shipment))
+        }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Sender)

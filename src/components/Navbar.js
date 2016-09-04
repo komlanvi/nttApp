@@ -20,7 +20,7 @@ export default class Navbar extends React.Component {
                     </div>
                     <div className="collapse navbar-collapse">
                         <ul className="nav navbar-nav text-center">/
-                            <li><Link to="/factory">Factory</Link></li>
+                            <li><Link to="/sender">Sender</Link></li>
                             <li><Link to="/driver">Driver</Link></li>
                             <li><Link to="/destination">Destination</Link></li>
                         </ul>

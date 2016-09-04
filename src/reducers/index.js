@@ -1,48 +1,83 @@
 import * as type from '../constants'
+import { routerReducer } from 'react-router-redux'
+import { combineReducers } from 'redux'
 
-const initialState = {
-    number: 1,
-    shipments: [],
-    checkedList: []
+const usersState = {
+    "1": {id: "1", name: "sender1", password: "sender1"},
+    "2": {id: "2", name: "sender2", password: "sender2"}
 }
 
-export function update(state = initialState, action) {
-    if(action.type === type.INCREASE) {
-        return { number: state.number + action.amount }
-    }
-    else if(action.type === type.DECREASE) {
-        return { number: state.number - action.amount }
-    }
+const initialShipments = [
+    {
+        id: 1,
+        factory: "factory1",
+        truck: "truck1",
+        destination: "gas_station1",
+        timestamp: "timestamp1",
+        driver: "driver1",
+        volume: "volume"
+    },
+    {
+        id: 2,
+        factory: "factory2",
+        truck: "truck1",
+        destination: "gas_station1",
+        timestamp: "timestamp1",
+        driver: "driver1",
+        volume: "volume"
+    },
+    {
+        id: 3,
+        factory: "factory3",
+        truck: "truck1",
+        destination: "gas_station1",
+        timestamp: "timestamp1",
+        driver: "driver1",
+        volume: "volume"
+    }]
+// export function update(state = initialState, action) {
+//     if(action.type === type.INCREASE) {
+//         return { number: state.number + action.amount }
+//     }
+//     else if(action.type === type.DECREASE) {
+//         return { number: state.number - action.amount }
+//     }
+//     return state
+// }
+
+const users = (state = usersState, action) => {
     return state
 }
 
-
-export function add_shipments(state = initialState, action) {
+const shipments = (state = initialShipments, action) => {
     switch (action.type) {
         case type.ADD_SHIPMENTS:
-            return {
+            return [
                 ...state,
-                shipments: [
-                    state.shipments,
-                    ...action.shipments
-                ]
-            };
+                action.shipments
+            ];
         default:
             return state
     }
 }
 
-export function refresh_checked_list(state = initialState, action) {
+function checked_list(state = [], action) {
     switch (action.type) {
         case type.REFRESH_CHECKED_LIST:
-            return {
-                ...state,
-                checkedList: action.checkedList
-            };
+            return [
+                ...action.checkedList
+            ];
         default:
             return state
     }
 }
+
+export default combineReducers({
+    users,
+    shipments,
+    checked_list,
+    routing: routerReducer
+})
 
 // export function remove_from_checked_list(state = initialState, action) {
 //     switch (action.type) {

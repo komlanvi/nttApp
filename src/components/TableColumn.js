@@ -5,32 +5,13 @@ import React from "react";
 
 export default class TableColumn extends React.Component {
 
-    constructor() {
-        super();
-        this.state = {
-            checked: false
-        }
-    }
-
-    componentDidUpdate() {
-        if (this.state.checked) {
-            console.log("From componentDidUpdate: " +this.state.checked);
-            //alert(this.props.shipment.id+ " is check");
-            this.props.addToCheckedList(this.props.shipment.id);
-        } else {
-            console.log("From componentDidUpdate: Not checked");
-        }
-
-    }
-
     render() {
-        console.log(this.state.checked);
         return (
             <tr>
                 <td>
                     <div className="checkbox my-checkbox">
                         <label>
-                            <input onChange={this._handleChecked.bind(this)} type="checkbox" value={this.props.shipment.id} id="" />
+                            <input onChange={this._handleChecked.bind(this)} type="checkbox" value={this.props.id} id={this.props.id} />
                         </label>
                     </div>
                 </td>
@@ -48,9 +29,11 @@ export default class TableColumn extends React.Component {
         )
     }
 
-    _handleChecked() {
-        this.setState({
-            checked: !this.state.checked
-        });
+    _handleChecked(e) {
+        if (e.target.checked) {
+            this.props.addToCheckedList(e.target.value, true)
+        } else {
+            this.props.addToCheckedList(e.target.value, false)
+        }
     }
 }

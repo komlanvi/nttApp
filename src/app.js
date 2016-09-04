@@ -9,13 +9,12 @@ import { Provider } from 'react-redux'
 import { Router, Route, IndexRoute, browserHistory } from 'react-router'
 import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
 
-import * as reducers from './reducers'
-import { Home, Layout, Destination, Driver, Factory } from './components'
+import * as reducers from './reducers/index'
+import { Home, Layout, Destination, Driver } from './components'
+// import SenderContainer from './containers/SenderContainer'
+import Sender from './components/Sender'
+import reducer from './reducers/index'
 
-const reducer = combineReducers({
-    ...reducers,
-    routing: routerReducer
-})
 
 const DevTools = createDevTools(
     <DockMonitor toggleVisibilityKey="ctrl-h" changePositionKey="ctrl-q">
@@ -27,6 +26,7 @@ const store = createStore(
     reducer,
     DevTools.instrument()
 )
+
 const history = syncHistoryWithStore(browserHistory, store)
 
 ReactDOM.render(
@@ -35,7 +35,7 @@ ReactDOM.render(
             <Router history={history}>
                 <Route path="/" component={Layout}>
                     <IndexRoute component={Home}/>
-                    <Route path="factory" component={Factory} />
+                    <Route path="sender" component={Sender} />
                     <Route path="destination" component={Destination} />
                     <Route path="driver" component={Driver} />
                 </Route>

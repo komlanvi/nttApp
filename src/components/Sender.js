@@ -5,26 +5,20 @@ import React from "react";
 import Table from './Table';
 import TableColumn from './TableColumn';
 import chaincode from '../js/utility';
-import { refresh_checked_list, add_shipments } from '../actions';
-import { connect, dispatch } from 'react-redux'
+import { refresh_checked_list, add_shipments } from '../actions/count';
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 
 class Sender extends React.Component{
 
     constructor(){
         super();
+        this.state = {
+            checkedList: [],
+            changedId: 0
+        }
     }
-    //
-    // componentWillMount() {
-    //     this._listaShipments();
-    // }
-    //
-    // componentDidMount() {
-    //     //this._timer = setInterval(() => this._listaShipments(), 4000);
-    // }
-    //
-    // componentWillUnmount() {
-    //     //clearInterval(this._timer);
-    // }
+
 
     //GET ALL
 
@@ -111,44 +105,11 @@ class Sender extends React.Component{
             dataType: "json",
             contentType: "application/json"
         });*/
-        var x = [
-            {
-                id: 1,
-                factory: "factory1",
-                truck: "truck1",
-                destination: "gas_station1",
-                timestamp: "timestamp1",
-                driver: "driver1",
-                volume: "volume"
-            },
-            {
-                id: 2,
-                factory: "factory2",
-                truck: "truck1",
-                destination: "gas_station1",
-                timestamp: "timestamp1",
-                driver: "driver1",
-                volume: "volume"
-            },
-            {
-                id: 3,
-                factory: "factory3",
-                truck: "truck1",
-                destination: "gas_station1",
-                timestamp: "timestamp1",
-                driver: "driver1",
-                volume: "volume"
-            }];
-        x.map((ship) => {
-            console.log(ship);
-        });
-
         // //alert(x);
         // this.setState({
         //     shipments: x
         // });
-        this.props.add_shipments(x);
-
+        // this.props.add_shipments(x);
     }
 
     //ADD
@@ -190,22 +151,32 @@ class Sender extends React.Component{
             dataType: "json",
             contentType: "application/json"
         });*/
-
+        this.shipmentsId = this.props.shipments.length;
+        console.log("Shipments length: ", this.shipmentsId)
+        this.props.add_shipments({
+            id: ++this.shipmentsId,
+            factory: `${this._factory.value}`,
+            truck: `${this._truck.value}`,
+            destination: `${this._destination.value}`,
+            timestamp: '',
+            driver: `${this._driver.value}`,
+            volume: `${this._volume.value}`
+        })
     }
 
     _getColumns() {
-        console.log(this.props.shipments);
+        console.log("Shipments: ", this.props.shipments);
         return this.props.shipments.map((c) => {
-            return <TableColumn shipment={c} key={c.id} addToCheckedList={this._addToCheckedList.bind(this)}/>
+            return <TableColumn shipment={c} key={c.id} id={c.id} addToCheckedList={this._addToCheckedList.bind(this)}/>
         });
     }
 
     _verify() {
-        this.state.checkedList.map((id) => {
-            this.state.shipments.map((shipment) => {
-                if(shipment.id == id) {
-                    console.log(shipment.factory +" has been verified");
-                    $.ajax({
+        this.state.checkedList.map((checkedShipment) => {
+            this.props.shipments.map((shipment) => {
+                if(shipment.id == checkedShipment.id) {
+                    console.log("Shipment with id = ", shipment.id +" has been verified");
+                    /*$.ajax({
                         type: "POST",
                         url: "http://10.186.65.231:5000/chaincode",
                         data: JSON.stringify(
@@ -236,27 +207,46 @@ class Sender extends React.Component{
                         },
                         dataType: "json",
                         contentType: "application/json"
-                    });
+                    });*/
                 }
-            });
+            })
         })
+        this.props.refresh_checked_list(this.state.checkedList)
     }
 
-    _addToCheckedList(checked) {
-        if(this.state.checkedList.indexOf(checked) < 0) {
+    _addToCheckedList(shipmentId, checked) {
+        this.setState({
+            changedId: shipmentId
+        })
+        if (checked) {
             this.setState({
-                checkedList: this.state.checkedList.concat([checked])
+                checkedList: this.state.checkedList.concat(this.props.shipments.filter((shipment) => {
+                    if (shipment.id == shipmentId) {
+                        return shipment
+                    }
+                }))
             });
+            // console.log("After added ",shipmentId, " :", this.state.checkedList)
+        } else {
+            this.setState({
+                checkedList: this.state.checkedList.filter((shipment) => {
+                    if (shipment.id != shipmentId) {
+                        return shipment
+                    }
+                })
+            });
+            // console.log("After removed ",shipmentId, " :", this.state.checkedList)
         }
-
     }
 
     componentDidUpdate() {
-        console.log(this.state.checkedList);
+        console.log("After added/removed ",this.state.changedId, " :", this.state.checkedList)
     }
 
     render() {
-        const { add_shipments,  } = this.props;
+        const { shipments, users} = this.props;
+        console.log("Users: ", users)
+        console.log("Shipments: " +shipments)
         return (
             <div>
                 <Table columns={this._getColumns()}  />
@@ -352,18 +342,18 @@ class Sender extends React.Component{
     }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
+    console.log("Store from map: ", state)
+    console.log("Store from map: ", state.users)
     return {
-        shipments: state.shipments
+        shipments: state.shipments,
+        users: state.users,
+        filter: ownProps.location.query.filter
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
-    return {
-        add_shipments: (shipment) => {
-            dispatch(add_shipments(shipment))
-        }
-    }
+    return bindActionCreators({ refresh_checked_list, add_shipments }, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Sender)
