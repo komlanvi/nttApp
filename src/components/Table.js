@@ -11,8 +11,8 @@ export default class Table extends React.Component {
             <thead>
             <tr>
                 <th></th>
-                <th>Factory</th>
-                <th>Truck</th>
+                <th>Sender</th>
+                <th>Logistics</th>
                 <th>Destination</th>
                 <th>timestamp</th>
                 <th>Driver</th>

@@ -4,7 +4,7 @@
 import React from "react";
 import Table from './Table';
 import TableColumn from './TableColumn';
-import chaincode from '../js/utility';
+import { chaincode, createShipment } from '../js/utility';
 import { refresh_checked_list, add_shipments } from '../actions/count';
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -18,7 +18,6 @@ class Sender extends React.Component{
             changedId: 0
         }
     }
-
 
     //GET ALL
 
@@ -105,11 +104,6 @@ class Sender extends React.Component{
             dataType: "json",
             contentType: "application/json"
         });*/
-        // //alert(x);
-        // this.setState({
-        //     shipments: x
-        // });
-        // this.props.add_shipments(x);
     }
 
     //ADD
@@ -127,8 +121,10 @@ class Sender extends React.Component{
                             "name": `${chaincode}`
                         },
                         "ctorMsg": {
+                            "Function":"shipment",
+                            "Args": ["sender_1","logistics_1","destination_1", "volume", "sender_employee", "driver" ]
                             "function":"shipment",
-                            "args":[ `${this._factory.value}`, `${this._truck.value}`, `${this._driver.value}`, `${this._volume.value}`, `${this._destination.value}`]
+                            "args":[ `${this.sender.value}`, `${this.logistics.value}`, `${this.driver.value}`, `${this.volume.value}`, `${this.destination.value}`]
                         },
                         "secureContext": "factory_nvp",
                         "attributes": ["create"]
@@ -155,13 +151,21 @@ class Sender extends React.Component{
         console.log("Shipments length: ", this.shipmentsId)
         this.props.add_shipments({
             id: ++this.shipmentsId,
-            factory: `${this._factory.value}`,
-            truck: `${this._truck.value}`,
-            destination: `${this._destination.value}`,
+            sender: `${this.sender.value}`,
+            logistics: `${this.logistics.value}`,
+            destination: `${this.destination.value}`,
+            volume: `${this.volume.value}`,
+            driver: `${this.driver.value}`,
             timestamp: '',
-            driver: `${this._driver.value}`,
-            volume: `${this._volume.value}`
         })
+        // createShipment(
+        //     this.shipmentsId,
+        //     this.sender.value,
+        //     this.logistics.value,
+        //     this.destination.value,
+        //     this.volume.value,
+        //     this.driver.value
+        // )
     }
 
     _getColumns() {
@@ -226,7 +230,6 @@ class Sender extends React.Component{
                     }
                 }))
             });
-            // console.log("After added ",shipmentId, " :", this.state.checkedList)
         } else {
             this.setState({
                 checkedList: this.state.checkedList.filter((shipment) => {
@@ -235,7 +238,6 @@ class Sender extends React.Component{
                     }
                 })
             });
-            // console.log("After removed ",shipmentId, " :", this.state.checkedList)
         }
     }
 
@@ -274,26 +276,26 @@ class Sender extends React.Component{
                             <div className="modal-body">
                                 <form onSubmit={this._handleAddShipment.bind(this)}>
                                     <div className="form-group mb5">
-                                        <label className="control-label col-sm-2" htmlFor="factory">Sender:</label>
+                                        <label className="control-label col-sm-2" htmlFor="sender">Sender:</label>
                                         <div className="col-sm-10">
                                             <input ref={
-                                                (factory) => this._factory = factory
-                                            } type="text" className="form-control" id="factory" defaultValue="factory_1"/>
+                                                (sender) => this.sender = sender
+                                            } type="text" className="form-control" id="sender" defaultValue="sender_1"/>
                                         </div>
                                     </div>
                                     <div className="form-group mb5">
-                                        <label className="control-label col-sm-2" htmlFor="truck">Truck:</label>
+                                        <label className="control-label col-sm-2" htmlFor="truck">Logistics:</label>
                                         <div className="col-sm-10">
                                             <input ref={
-                                                (truck) => this._truck = truck
-                                            } type="text" className="form-control" id="truck" defaultValue="truck_1"/>
+                                                (logistics) => this.logistics = logistics
+                                            } type="text" className="form-control" id="logistics" defaultValue="logistics_1"/>
                                         </div>
                                     </div>
                                     <div className="form-group mb5">
                                         <label className="control-label col-sm-2" htmlFor="driver">Driver:</label>
                                         <div className="col-sm-10">
                                             <input ref={
-                                                (driver) => this._driver = driver
+                                                (driver) => this.driver = driver
                                             } type="text" className="form-control" id="driver" defaultValue="driver_1"/>
                                         </div>
                                     </div>
@@ -301,7 +303,7 @@ class Sender extends React.Component{
                                         <label className="control-label col-sm-2" htmlFor="volume">Volume:</label>
                                         <div className="col-sm-10">
                                             <input ref={
-                                                (volume) => this._volume = volume
+                                                (volume) => this.volume = volume
                                             } type="text" className="form-control" id="volume" placeholder="Enter the volume"/>
                                         </div>
                                     </div>
@@ -309,7 +311,7 @@ class Sender extends React.Component{
                                         <label className="control-label col-sm-2" htmlFor="pwd">Destination:</label>
                                         <div className="col-sm-10">
                                             <input ref={
-                                                (destination) => this._destination = destination
+                                                (destination) => this.destination = destination
                                             } type="text" className="form-control" id="destination" defaultValue="destination_1" />
                                         </div>
                                     </div>
@@ -344,7 +346,7 @@ class Sender extends React.Component{
 
 const mapStateToProps = (state, ownProps) => {
     console.log("Store from map: ", state)
-    console.log("Store from map: ", state.users)
+    console.log("User from map: ", state.users)
     return {
         shipments: state.shipments,
         users: state.users,

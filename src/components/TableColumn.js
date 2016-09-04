@@ -15,8 +15,8 @@ export default class TableColumn extends React.Component {
                         </label>
                     </div>
                 </td>
-                <td>{this.props.shipment.factory}</td>
-                <td>{this.props.shipment.truck}</td>
+                <td>{this.props.shipment.sender}</td>
+                <td>{this.props.shipment.logistics}</td>
                 <td>{this.props.shipment.destination}</td>
 
                 <td>{this.props.shipment.timestamp}</td>

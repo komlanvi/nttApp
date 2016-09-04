@@ -6,7 +6,6 @@ const usersState = {
     "1": {id: "1", name: "sender1", password: "sender1"},
     "2": {id: "2", name: "sender2", password: "sender2"}
 }
-
 const initialShipments = [
     {
         id: 1,
@@ -45,11 +44,11 @@ const initialShipments = [
 //     return state
 // }
 
-const users = (state = usersState, action) => {
+const users = (state = [], action) => {
     return state
 }
 
-const shipments = (state = initialShipments, action) => {
+const shipments = (state = [], action) => {
     switch (action.type) {
         case type.ADD_SHIPMENTS:
             return [

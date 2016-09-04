@@ -8,12 +8,13 @@ import { createStore, combineReducers } from 'redux'
 import { Provider } from 'react-redux'
 import { Router, Route, IndexRoute, browserHistory } from 'react-router'
 import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
+// import $ from 'jquery'
 
-import * as reducers from './reducers/index'
 import { Home, Layout, Destination, Driver } from './components'
 // import SenderContainer from './containers/SenderContainer'
 import Sender from './components/Sender'
 import reducer from './reducers/index'
+import { getShipments } from './js/utility'
 
 
 const DevTools = createDevTools(
@@ -21,9 +22,31 @@ const DevTools = createDevTools(
         <LogMonitor theme="tomorrow" preserveScrollTop={false} />
     </DockMonitor>
 )
+//
+// $.ajax({
+//     type: "POST",
+//     url: "http://127.0.0.1:5000/registrar",
+//     data: JSON.stringify({
+//         "enrollId": "sender",
+//         "enrollSecret": "MS9qrN8hFjlE"
+//     }),
+//     success: (data) => {
+//         console.log("Successfull: ",data)
+//     },
+//     error: (error) => {
+//         console.log("Error: ",error)
+//     },
+//     dataType: 'json',
+//     contentType: "application/json"
+// })
+
+// connectToAPI()
+
+const initialState = getShipments()
 
 const store = createStore(
     reducer,
+    initialState,
     DevTools.instrument()
 )
 
@@ -45,15 +68,3 @@ ReactDOM.render(
     </Provider>,
     document.getElementById('mount')
 )
-
-// ReactDOM.render(
-//     (<Router history={browserHistory}>
-//         <Route path="/" component={Layout}>
-//             <IndexRoute component={Index}/>
-//             <Route path="factory" component={Factory} />
-//             <Route path="destination" component={Destination} />
-//             <Route path="driver" component={Driver} />
-//         </Route>
-//     </Router>),
-//     document.getElementById('myApp')
-// );
