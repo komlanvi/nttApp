@@ -46,6 +46,7 @@ crashlytics-build.properties
 fabric.properties
 
 .gitignore
+node_modules
 node_modules/acorn-jsx/
 node_modules/acorn/CHANGELOG.md
 node_modules/acorn/dist/acorn.es.js
