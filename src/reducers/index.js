@@ -71,29 +71,29 @@ function checked_list(state = [], action) {
     }
 }
 
+const userReducer = (state = {}, /*{ type, payload }*/action) => {
+    if (action.type === type.USER_LOGGED_IN) {
+        return action.user
+    }
+    if (action.type === type.USER_LOGGED_OUT) {
+        return {}
+    }
+    return state
+}
+
+const notification = (state = '', action) => {
+    if (action.type === type.NOTIFICATION) {
+        return action.message
+    } else {
+        return state
+    }
+}
+
 export default combineReducers({
     users,
     shipments,
     checked_list,
+    alertMessage: notification,
+    user: userReducer,
     routing: routerReducer
 })
-
-// export function remove_from_checked_list(state = initialState, action) {
-//     switch (action.type) {
-//         case type.REMOVE_FROM_CHECKED_LIST:
-//             return {
-//                 ...initialState,
-//                 checkedList: [
-//                     return action.uncheckedIndexList.filter((shipment) => {
-//                         var c = a.filter(function(item) {
-//                             return b.indexOf(item) === -1;
-//                         });
-//                     });
-//                     ...state.checkedList.slice(0, action.index),
-//                     ...state.checkedList.slice(action.index+1)
-//                 ]
-//             };
-//         default:
-//             return state
-//     }
-// }

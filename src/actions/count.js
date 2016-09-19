@@ -26,6 +26,23 @@ export function refresh_checked_list(checkedList = []) {
         checkedList
     }
 }
+
+export const authenticated = (pseudo, password) => {
+    return {
+        type: 'USER_LOGGED_IN',
+        user: {
+            pseudo,
+            password
+        }
+    }
+}
+
+export const addNotification = (message) => {
+    return {
+        type: 'NOTIFICATION',
+        message
+    }
+}
 //
 // export function remove_from_checked_list(uncheckedIndexList = []) {
 //     return {
