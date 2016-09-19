@@ -45,8 +45,10 @@ class Login extends React.Component {
 
 const mapStateToProps = (state, ownProp) => {
     console.log("User name: ", state.user.pseudo, " and pass = ", state.user.password)
+    console.log("Alert message: ", state.alertMessage)
     return {
-        id: ownProp.id
+        id: ownProp.id,
+        alertMessage: state.alertMessage
     }
 }
 
@@ -56,6 +58,7 @@ const mapDispatchToProps = (dispatch, ownProp) => {
             console.log("name " +pseudo+ " --- pass " +password);
             dispatch(authenticated(pseudo, password));
             // ownProp.location.query.redirect = '/driver'
+            // dispatch(addNotification('Incorrect pseudo or password!' ))
         }
     }
 }

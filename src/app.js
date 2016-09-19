@@ -9,7 +9,9 @@ import { Provider } from 'react-redux'
 import { Router, Route, IndexRoute, browserHistory } from 'react-router'
 import { syncHistoryWithStore, routerReducer, routerActions, routerMiddleware } from 'react-router-redux'
 import Login from './components/Login'
-import { UserAuthWrapper } from 'redux-auth-wrapper'
+import { SenderIsAuthenticated, SenderIsNotAuthenticated } from './auth/SenderAuth'
+import { DriverIsAuthenticated, DriverIsNotAuthenticated } from './auth/DriverAuth'
+import { DestinationIsAuthenticated, DestinationIsNotAuthenticated } from './auth/DestinationAuth'
 // import $ from 'jquery'
 
 import { Home, Layout, Destination, Driver } from './components'
@@ -62,35 +64,18 @@ const store = createStore(
 
 const history = syncHistoryWithStore(browserHistory, store)
 
-const UserIsAuthenticated = UserAuthWrapper({
-    authSelector: state => state.user, // how to get the user state
-    redirectAction: routerActions.replace, // the redux action to dispatch for redirect
-    wrapperDisplayName: 'UserIsAuthenticated', // a nice name for this auth check
-    predicate: user => {
-        return user.pseudo == 'sender1' && user.password == 'sender1'
-    }
-})
-
-const UserIsNotAuthenticated = UserAuthWrapper({
-    authSelector: state => state.user,
-    redirectAction: routerActions.replace,
-    wrapperDisplayName: 'UserIsNotAuthenticated',
-    // Want to redirect the user when they are finally authenticated
-    predicate: user => user.pseudo != 'sender1' && user.password != 'sender1',
-    failureRedirectPath: (state, ownProps) => ownProps.location.query.redirect /*|| '/sender'*/,
-    allowRedirectBack: false
-})
-
 ReactDOM.render(
     <Provider store={store}>
         <div>
             <Router history={history}>
                 <Route path="/" component={Layout}>
                     <IndexRoute component={Home}/>
-                    <Route path="/login" component={UserIsNotAuthenticated(Login)}/>
-                    <Route path="/sender" component={UserIsAuthenticated(Sender)} />
-                    <Route path="/destination" component={Destination} />
-                    <Route path="/driver" component={Driver} />
+                    <Route path="/sender_login" component={SenderIsNotAuthenticated(Login)}/>
+                    <Route path="/driver_login" component={DriverIsNotAuthenticated(Login)}/>
+                    <Route path="/destination_login" component={DestinationIsNotAuthenticated(Login)}/>
+                    <Route path="/sender" component={SenderIsAuthenticated(Sender)} />
+                    <Route path="/destination" component={DestinationIsAuthenticated(Destination)} />
+                    <Route path="/driver" component={DriverIsAuthenticated(Driver)} />
                 </Route>
             </Router>
             <DevTools />

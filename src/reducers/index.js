@@ -81,10 +81,19 @@ const userReducer = (state = {}, /*{ type, payload }*/action) => {
     return state
 }
 
+const notification = (state = '', action) => {
+    if (action.type === type.NOTIFICATION) {
+        return action.message
+    } else {
+        return state
+    }
+}
+
 export default combineReducers({
     users,
     shipments,
     checked_list,
+    alertMessage: notification,
     user: userReducer,
     routing: routerReducer
 })

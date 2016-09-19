@@ -36,6 +36,13 @@ export const authenticated = (pseudo, password) => {
         }
     }
 }
+
+export const addNotification = (message) => {
+    return {
+        type: 'NOTIFICATION',
+        message
+    }
+}
 //
 // export function remove_from_checked_list(uncheckedIndexList = []) {
 //     return {
